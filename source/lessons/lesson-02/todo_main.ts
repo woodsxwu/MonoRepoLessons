@@ -45,18 +45,18 @@ export class TodoApp {
 
   public initialize(): void {
     try {
-      console.log('Initializing Todo List Manager...');
+      // Initializing Todo List Manager silently
       
       // Load existing data if available
       this.loadData();
       
       // Create UI
-      this.ui = new BlessedTodoUI(this.todoList);
+      this.ui = new BlessedTodoUI(this.todoList, this.saveFilePath);
       
       // Setup auto-save
       this.setupAutoSave();
       
-      console.log('Initialization complete.');
+      // Initialization complete
     } catch (error) {
       console.error('Failed to initialize application:', error);
       throw new Error('Failed to initialize application');
@@ -66,22 +66,22 @@ export class TodoApp {
   private loadData(): void {
     try {
       if (fs.existsSync(this.saveFilePath)) {
-        console.log(`Loading data from ${this.saveFilePath}...`);
+        // Loading data silently
         const data = fs.readFileSync(this.saveFilePath, 'utf8');
         
         if (data.trim()) {
           this.todoList = TodoList.fromJSON(data);
-          console.log('Data loaded successfully.');
+          // Data loaded successfully
         } else {
-          console.log('Save file is empty, starting with fresh data.');
+          // Save file is empty, starting with fresh data
         }
       } else {
-        console.log('No existing save file found, starting with fresh data.');
+        // No existing save file found, starting with fresh data
         this.ensureSaveDirectory();
       }
     } catch (error) {
       console.error('Failed to load saved data:', error);
-      console.log('Starting with fresh data.');
+      // Starting with fresh data
       this.todoList = new TodoList();
       
       if (this.ui) {
@@ -95,7 +95,7 @@ export class TodoApp {
       const saveDir = path.dirname(this.saveFilePath);
       if (!fs.existsSync(saveDir)) {
         fs.mkdirSync(saveDir, { recursive: true });
-        console.log(`Created save directory: ${saveDir}`);
+        // Created save directory silently
       }
     } catch (error) {
       console.error('Failed to create save directory:', error);
@@ -104,17 +104,8 @@ export class TodoApp {
   }
 
   private setupAutoSave(): void {
-    // Auto-save every 30 seconds
-    this.autoSaveInterval = setInterval(() => {
-      try {
-        this.save();
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        if (this.ui) {
-          this.ui.showError('Auto-save failed');
-        }
-      }
-    }, 30000);
+    // Auto-save is now handled after each operation
+    // No timer needed - saves immediately after each edit
   }
 
   public save(): void {
@@ -124,7 +115,7 @@ export class TodoApp {
       const data = this.todoList.toJSON();
       fs.writeFileSync(this.saveFilePath, data, 'utf8');
       
-      console.log(`Data saved to ${this.saveFilePath}`);
+      // Data saved silently to avoid interfering with UI display
     } catch (error) {
       if ((error as any).code === 'ENOSPC') {
         throw new Error('Insufficient disk space to save todo data');
@@ -134,14 +125,14 @@ export class TodoApp {
     }
   }
 
+
   public start(): void {
     try {
       if (!this.ui) {
         throw new Error('UI not initialized. Call initialize() first.');
       }
 
-      console.log('Starting Todo List Manager UI...');
-      console.log('Press Ctrl+C or \'q\' to quit');
+      // Starting Todo List Manager UI silently
       
       // Start the UI
       this.ui.start();
@@ -154,13 +145,7 @@ export class TodoApp {
 
   public shutdown(): void {
     try {
-      console.log('Shutting down Todo List Manager...');
-      
-      // Stop auto-save
-      if (this.autoSaveInterval) {
-        clearInterval(this.autoSaveInterval);
-        this.autoSaveInterval = null;
-      }
+      // Shutting down Todo List Manager silently
       
       // Save final state
       this.save();
@@ -170,7 +155,7 @@ export class TodoApp {
         this.ui.shutdown();
       }
       
-      console.log('Shutdown complete.');
+      // Shutdown complete
     } catch (error) {
       console.error('Error during shutdown:', error);
       if ((error as Error).message.includes('save')) {
@@ -183,7 +168,7 @@ export class TodoApp {
   public handleProcessTermination(): void {
     try {
       this.save();
-      console.log('Data saved before exit.');
+      // Data saved before exit
     } catch (error) {
       console.error('Failed to save data before exit:', error);
     }
@@ -218,18 +203,14 @@ export class TodoApp {
 // Main execution function
 function main(): void {
   try {
-    console.log('Creating TodoApp...');
     const app = new TodoApp();
     
-    console.log('Initializing application...');
     // Initialize the application
     app.initialize();
     
-    console.log('Starting UI...');
     // Start the UI
     app.start();
     
-    console.log('Application started successfully');
   } catch (error) {
     console.error('Fatal error:', error);
     process.exit(1);
