@@ -9,32 +9,96 @@ describe('TodoList Model', () => {
 
   describe('Core Functionality - Adding Tasks', () => {
     // User Story: As a user, I want to add new tasks to my list so that I can remember what I need to accomplish.
+    // 
+    // This user story focuses on the fundamental need to capture tasks that need to be done.
+    // The user wants to be able to input a task description and have it stored in their list
+    // so they don't forget important things they need to do.
     
     describe('Happy Path', () => {
       test('should add a task with valid title', () => {
-        const task = todoList.addTask('Buy groceries');
+        // Test Setup: This test verifies the core functionality described in the user story.
+        // We're testing that a user can successfully add a task with a meaningful title
+        // and that the system properly stores all the necessary task information.
         
-        expect(task.title).toBe('Buy groceries');
-        expect(task.completed).toBe(false);
-        expect(task.id).toBeDefined();
-        expect(task.createdAt).toBeInstanceOf(Date);
-        expect(todoList.getTasks()).toHaveLength(1);
+        // Data Setup: Create a realistic task title that a user might actually enter
+        const taskTitle = 'Buy groceries';
+        
+        // Action: Perform the core action from the user story - adding a new task
+        // This simulates the user entering a task title and submitting it
+        const task = todoList.addTask(taskTitle);
+        
+        // Expected Values: Define what we expect to happen when a user adds a task
+        const expectedTitle = 'Buy groceries';
+        const expectedCompletedStatus = false; // New tasks should start as incomplete
+        const expectedListLength = 1; // After adding one task, list should have one item
+        
+        // Verification: Test that the user story requirement is met
+        // "I want to add new tasks to my list" - verify the task was added with correct title
+        expect(task.title).toBe(expectedTitle);
+        
+        // "so that I can remember what I need to accomplish" - verify task is stored as incomplete
+        // (incomplete tasks are what the user needs to accomplish)
+        expect(task.completed).toBe(expectedCompletedStatus);
+        
+        // Verify system generates necessary metadata for task management
+        expect(task.id).toBeDefined(); // System should assign unique identifier
+        expect(task.createdAt).toBeInstanceOf(Date); // System should track when task was created
+        
+        // Verify the task is actually stored in the user's list
+        expect(todoList.getTasks()).toHaveLength(expectedListLength);
       });
 
       test('should add multiple tasks', () => {
-        todoList.addTask('Task 1');
-        todoList.addTask('Task 2');
-        todoList.addTask('Task 3');
+        // Test Setup: This test verifies that users can add multiple tasks to build up their list
+        // This reflects the real-world scenario where users have multiple things to remember
         
-        expect(todoList.getTasks()).toHaveLength(3);
-        expect(todoList.getTasks().map(t => t.title)).toEqual(['Task 1', 'Task 2', 'Task 3']);
+        // Data Setup: Create multiple realistic task titles
+        const firstTaskTitle = 'Task 1';
+        const secondTaskTitle = 'Task 2';
+        const thirdTaskTitle = 'Task 3';
+        
+        // Action: Add multiple tasks sequentially (simulating user adding tasks over time)
+        todoList.addTask(firstTaskTitle);
+        todoList.addTask(secondTaskTitle);
+        todoList.addTask(thirdTaskTitle);
+        
+        // Expected Values: Define what we expect after adding multiple tasks
+        const expectedTaskCount = 3; // Should have all three tasks
+        const expectedTaskTitles = ['Task 1', 'Task 2', 'Task 3']; // Should preserve order and content
+        
+        // Verification: Test that multiple tasks can be added to fulfill user story
+        // "I want to add new tasks to my list" - verify all tasks were added
+        expect(todoList.getTasks()).toHaveLength(expectedTaskCount);
+        
+        // "so that I can remember what I need to accomplish" - verify all tasks are preserved with correct titles
+        expect(todoList.getTasks().map(t => t.title)).toEqual(expectedTaskTitles);
       });
 
       test('should generate unique IDs for each task', () => {
-        const task1 = todoList.addTask('First task');
-        const task2 = todoList.addTask('Second task');
+        // Test Setup: This test ensures the system can distinguish between different tasks
+        // This is crucial for the user story because users need to be able to manage
+        // individual tasks (complete, delete, edit) without affecting other tasks
         
+        // Data Setup: Create two different tasks with different titles
+        const firstTaskTitle = 'First task';
+        const secondTaskTitle = 'Second task';
+        
+        // Action: Add two separate tasks to the list
+        const task1 = todoList.addTask(firstTaskTitle);
+        const task2 = todoList.addTask(secondTaskTitle);
+        
+        // Expected Values: Each task should have a unique identifier
+        // (We can't predict the exact ID values, but we know they should be different)
+        const expectedIdUniqueness = true; // IDs should not be the same
+        
+        // Verification: Test that the system can distinguish between tasks
+        // This supports the user story by ensuring each task the user adds
+        // can be individually managed and remembered
         expect(task1.id).not.toBe(task2.id);
+        
+        // Additional verification: Both IDs should actually exist
+        expect(task1.id).toBeDefined();
+        expect(task2.id).toBeDefined();
       });
     });
 
@@ -89,26 +153,68 @@ describe('TodoList Model', () => {
 
   describe('Core Functionality - Marking Tasks Complete', () => {
     // User Story: As a user, I want to mark tasks as complete so that I can track my progress and feel accomplished.
+    //
+    // This user story addresses the psychological need for users to see their progress and feel
+    // a sense of accomplishment. When users complete tasks, they want to mark them as done
+    // both to track what they've achieved and to remove completed items from their active work.
     
     describe('Happy Path', () => {
       test('should mark a task as complete', () => {
-        const task = todoList.addTask('Complete project');
+        // Test Setup: This test verifies the core completion functionality from the user story.
+        // We're testing that users can mark tasks as complete to track their progress.
         
+        // Data Setup: Create a task that represents something a user would complete
+        const taskTitle = 'Complete project';
+        const task = todoList.addTask(taskTitle);
+        
+        // Capture the time before completion for verification
+        const beforeCompletionTime = new Date();
+        
+        // Action: Perform the core action from the user story - marking a task complete
+        // This simulates the user checking off a completed task
         todoList.completeTask(task.id);
         
-        expect(task.completed).toBe(true);
-        expect(task.completedAt).toBeInstanceOf(Date);
+        // Expected Values: Define what we expect when a user marks a task complete
+        const expectedCompletedStatus = true; // Task should be marked as completed
+        const expectedCompletedAtType = Date; // System should record when it was completed
+        
+        // Verification: Test that the user story requirements are met
+        // "I want to mark tasks as complete" - verify the task is marked as completed
+        expect(task.completed).toBe(expectedCompletedStatus);
+        
+        // "so that I can track my progress" - verify system records completion timestamp
+        expect(task.completedAt).toBeInstanceOf(expectedCompletedAtType);
+        
+        // Additional verification: completion time should be reasonable (after we started the test)
+        expect(task.completedAt!.getTime()).toBeGreaterThanOrEqual(beforeCompletionTime.getTime());
       });
 
       test('should mark multiple tasks as complete', () => {
-        const task1 = todoList.addTask('Task 1');
-        const task2 = todoList.addTask('Task 2');
+        // Test Setup: This test verifies that users can mark multiple tasks as complete
+        // This reflects real-world usage where users accomplish multiple things and want
+        // to track progress on all of them to feel accomplished about their productivity
         
+        // Data Setup: Create multiple tasks representing different accomplishments
+        const firstTaskTitle = 'Task 1';
+        const secondTaskTitle = 'Task 2';
+        const task1 = todoList.addTask(firstTaskTitle);
+        const task2 = todoList.addTask(secondTaskTitle);
+        
+        // Action: Mark both tasks as complete (simulating user completing multiple items)
         todoList.completeTask(task1.id);
         todoList.completeTask(task2.id);
         
-        expect(task1.completed).toBe(true);
-        expect(task2.completed).toBe(true);
+        // Expected Values: Both tasks should be marked as completed
+        const expectedCompletedStatus = true;
+        
+        // Verification: Test that multiple completions support the user story
+        // "I want to mark tasks as complete" - verify both tasks can be marked complete
+        expect(task1.completed).toBe(expectedCompletedStatus);
+        expect(task2.completed).toBe(expectedCompletedStatus);
+        
+        // "so that I can track my progress and feel accomplished" - verify both have completion timestamps
+        expect(task1.completedAt).toBeInstanceOf(Date);
+        expect(task2.completedAt).toBeInstanceOf(Date);
       });
 
       test('should set completion timestamp when marking complete', () => {
@@ -162,11 +268,33 @@ describe('TodoList Model', () => {
 
   describe('Core Functionality - Viewing Tasks', () => {
     // User Story: As a user, I want to view all my tasks in one place so that I can see everything I need to do.
+    //
+    // This user story addresses the fundamental need for users to have visibility into their workload.
+    // Users need to see all their tasks in a single, organized view so they can plan their work,
+    // prioritize what to do next, and ensure nothing gets forgotten or overlooked.
     
     describe('Happy Path', () => {
       test('should return empty array when no tasks exist', () => {
-        expect(todoList.getTasks()).toEqual([]);
-        expect(todoList.getTasks()).toHaveLength(0);
+        // Test Setup: This test verifies the initial state when a user first starts using the system
+        // Even with no tasks, the user should be able to view their (empty) task list
+        // This ensures the viewing functionality works in all states
+        
+        // Data Setup: Start with a fresh, empty todo list (no tasks added)
+        // The beforeEach already gives us an empty todoList, so no additional setup needed
+        
+        // Action: Attempt to view all tasks (simulating user opening their task list)
+        const allTasks = todoList.getTasks();
+        
+        // Expected Values: Define what we expect when viewing an empty task list
+        const expectedEmptyArray = []; // Should return empty array, not null or undefined
+        const expectedTaskCount = 0; // Should have zero tasks
+        
+        // Verification: Test that the user story is supported even with no tasks
+        // "I want to view all my tasks in one place" - verify viewing works (returns empty array)
+        expect(allTasks).toEqual(expectedEmptyArray);
+        
+        // "so that I can see everything I need to do" - verify user can see there's nothing to do
+        expect(allTasks).toHaveLength(expectedTaskCount);
       });
 
       test('should return all tasks in order of creation', () => {
@@ -279,12 +407,35 @@ describe('TodoList Model', () => {
 
   describe('Organization Features - Priority Levels', () => {
     // User Story: As a user, I want to set priority levels for my tasks so that I can focus on the most important items first.
+    //
+    // This user story addresses the need for users to organize their workload by importance.
+    // In real life, not all tasks are equally important. Users need to be able to mark some tasks
+    // as high priority so they can focus their limited time and energy on what matters most.
     
     describe('Happy Path', () => {
       test('should add task with priority', () => {
-        const task = todoList.addTask('High priority task', { priority: Priority.HIGH });
+        // Test Setup: This test verifies that users can assign priority levels when creating tasks
+        // This supports the user story by allowing users to categorize tasks by importance
+        // from the moment they create them
         
-        expect(task.priority).toBe(Priority.HIGH);
+        // Data Setup: Create a task that would realistically be high priority
+        const taskTitle = 'High priority task';
+        const taskPriority = Priority.HIGH;
+        
+        // Action: Add a task with a specific priority level
+        // This simulates a user creating a task and marking it as high priority
+        const task = todoList.addTask(taskTitle, { priority: taskPriority });
+        
+        // Expected Values: Define what we expect when a user sets task priority
+        const expectedPriority = Priority.HIGH; // Task should retain the assigned priority
+        
+        // Verification: Test that the user story requirement is met
+        // "I want to set priority levels for my tasks" - verify priority was set correctly
+        expect(task.priority).toBe(expectedPriority);
+        
+        // Additional verification: ensure the task still has all other expected properties
+        expect(task.title).toBe(taskTitle);
+        expect(task.completed).toBe(false); // Should still be incomplete initially
       });
 
       test('should default to medium priority when not specified', () => {
@@ -571,17 +722,48 @@ describe('TodoList Model', () => {
 
   describe('Productivity Features - Search', () => {
     // User Story: As a user, I want to search through my tasks so that I can quickly find specific items in a long list.
+    //
+    // This user story addresses the scalability problem that occurs when users have many tasks.
+    // As task lists grow, it becomes difficult to manually scan through all tasks to find a specific one.
+    // Search functionality allows users to quickly locate tasks by typing keywords, making the system
+    // usable even with hundreds of tasks.
     
     describe('Happy Path', () => {
       test('should find tasks by title search', () => {
-        todoList.addTask('Buy groceries');
-        todoList.addTask('Buy books');
-        todoList.addTask('Read books');
+        // Test Setup: This test verifies that users can search through their tasks to find specific items
+        // This is crucial for the user story because it enables quick task location in large lists
         
-        const results = todoList.searchTasks('buy');
+        // Data Setup: Create multiple tasks where some share common keywords
+        // This simulates a realistic scenario where a user has accumulated many tasks
+        const groceryTask = 'Buy groceries';
+        const bookPurchaseTask = 'Buy books';
+        const readingTask = 'Read books';
         
-        expect(results).toHaveLength(2);
-        expect(results.every(t => t.title.toLowerCase().includes('buy'))).toBe(true);
+        todoList.addTask(groceryTask);
+        todoList.addTask(bookPurchaseTask);
+        todoList.addTask(readingTask);
+        
+        // Action: Search for tasks containing a specific keyword
+        // This simulates a user typing a search term to find related tasks
+        const searchTerm = 'buy';
+        const results = todoList.searchTasks(searchTerm);
+        
+        // Expected Values: Define what we expect from the search
+        const expectedResultCount = 2; // Should find 'Buy groceries' and 'Buy books'
+        const expectedMatchCondition = true; // All results should contain the search term
+        
+        // Verification: Test that the user story requirement is met
+        // "I want to search through my tasks" - verify search returns matching tasks
+        expect(results).toHaveLength(expectedResultCount);
+        
+        // "so that I can quickly find specific items" - verify all results contain search term
+        expect(results.every(t => t.title.toLowerCase().includes(searchTerm))).toBe(expectedMatchCondition);
+        
+        // Additional verification: ensure the correct specific tasks were found
+        const resultTitles = results.map(t => t.title);
+        expect(resultTitles).toContain(groceryTask);
+        expect(resultTitles).toContain(bookPurchaseTask);
+        expect(resultTitles).not.toContain(readingTask); // Should not match 'Read books'
       });
 
       test('should perform case-insensitive search', () => {

@@ -10,6 +10,11 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:todo": "jest --config jest.config.todo.js",
+    "test:todo:watch": "jest --config jest.config.todo.js --watch",
+    "test:todo:coverage": "jest --config jest.config.todo.js --coverage",
+    "todo": "ts-node todo_main.ts",
+    "todo:build": "tsc && node dist/todo_main.js",
     "clean": "rm -rf dist"
   },
   "keywords": [
