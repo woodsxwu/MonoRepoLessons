@@ -10,7 +10,6 @@ export class TodoApp {
   private todoList: TodoList;
   private ui: BlessedTodoUI | null = null;
   private saveFilePath: string;
-  private autoSaveInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     this.todoList = new TodoList();
