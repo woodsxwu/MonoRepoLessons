@@ -649,6 +649,10 @@ export class BlessedTodoUI {
 
   public start(): void {
     this.screen.render();
+    
+    // Keep the process alive
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
   }
 
   public shutdown(): void {

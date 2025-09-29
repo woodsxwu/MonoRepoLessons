@@ -218,14 +218,18 @@ export class TodoApp {
 // Main execution function
 function main(): void {
   try {
+    console.log('Creating TodoApp...');
     const app = new TodoApp();
     
+    console.log('Initializing application...');
     // Initialize the application
     app.initialize();
     
+    console.log('Starting UI...');
     // Start the UI
     app.start();
     
+    console.log('Application started successfully');
   } catch (error) {
     console.error('Fatal error:', error);
     process.exit(1);
