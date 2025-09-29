@@ -1,4 +1,6 @@
 import * as blessed from 'blessed';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TodoList, Todo, Priority } from './todo';
 
 export type FilterType = 'all' | 'completed' | 'incomplete';
@@ -15,12 +17,14 @@ export class BlessedTodoUI {
   private currentFilter: FilterType = 'all';
   private todoList: TodoList;
   private showingAddForm: boolean = false;
+  private saveFilePath: string;
 
-  constructor(todoList: TodoList) {
+  constructor(todoList: TodoList, saveFilePath: string) {
     if (!todoList) {
       throw new Error('TodoList cannot be null');
     }
     this.todoList = todoList;
+    this.saveFilePath = saveFilePath;
     this.initializeUI();
   }
 
@@ -325,6 +329,7 @@ export class BlessedTodoUI {
     });
 
     this.priorityInput.key(['enter', 'tab'], () => {
+      this.categoryInput.cancel();
       this.categoryInput.readInput();
     });
 
@@ -334,10 +339,12 @@ export class BlessedTodoUI {
 
     // Add focus event handlers to manage input state
     this.titleInput.on('focus', () => {
+      this.titleInput.cancel();
       this.titleInput.readInput();
     });
 
     this.categoryInput.on('focus', () => {
+      this.categoryInput.cancel();
       this.categoryInput.readInput();
     });
 
@@ -399,17 +406,43 @@ export class BlessedTodoUI {
     this.categoryInput.setValue('');
     this.priorityInput.select(1); // Default to MEDIUM
     
-    // Ensure clean focus state
+    // Ensure clean focus state - cancel any existing input sessions
+    this.titleInput.cancel();
+    this.categoryInput.cancel();
+    
+    // Start fresh input session on title field
     this.titleInput.readInput();
     this.screen.render();
   }
 
   private hideAddForm(): void {
     this.showingAddForm = false;
+    
+    // Cancel any active input sessions
+    this.titleInput.cancel();
+    this.categoryInput.cancel();
+    
     this.addForm.hide();
     this.taskList.focus();
     this.clearError();
     this.screen.render();
+  }
+
+  private saveData(): void {
+    try {
+      // Ensure save directory exists
+      const saveDir = path.dirname(this.saveFilePath);
+      if (!fs.existsSync(saveDir)) {
+        fs.mkdirSync(saveDir, { recursive: true });
+      }
+      
+      // Save the data
+      const data = this.todoList.toJSON();
+      fs.writeFileSync(this.saveFilePath, data, 'utf8');
+    } catch (error) {
+      console.error('Failed to save data:', error);
+      this.showError('Failed to save changes');
+    }
   }
 
   public handleAddTask(): void {
@@ -428,6 +461,7 @@ export class BlessedTodoUI {
       const categoryOption = category ? category : undefined;
 
       this.todoList.addTask(title, { priority, category: categoryOption });
+      this.saveData(); // Save after adding task
       this.refreshTaskList();
       this.hideAddForm();
       this.showSuccess(`Task "${title}" added successfully`);
@@ -448,6 +482,7 @@ export class BlessedTodoUI {
         } else if (task) {
           this.todoList.completeTask(task.id);
         }
+        this.saveData(); // Save after toggling completion
         this.refreshTaskList();
       }
     } catch (error) {
@@ -464,6 +499,7 @@ export class BlessedTodoUI {
         const task = tasks[selectedIndex];
         if (task) {
           this.todoList.deleteTask(task.id);
+          this.saveData(); // Save after deleting task
           this.refreshTaskList();
           this.showSuccess(`Task "${task.title}" deleted`);
         }
@@ -648,6 +684,7 @@ export class BlessedTodoUI {
   }
 
   public start(): void {
+    this.taskList.focus();
     this.screen.render();
     
     // Keep the process alive
