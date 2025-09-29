@@ -40,7 +40,7 @@ npm install
 
 ```bash
 # Development mode (with ts-node)
-npm run dev
+npm run calculator
 
 # Production mode (compile first)
 npm run build
