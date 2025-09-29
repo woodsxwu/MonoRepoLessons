@@ -1,0 +1,33 @@
+{
+  "name": "todo-manager",
+  "version": "1.0.0",
+  "description": "A minimal terminal todo manager built with TypeScript and blessed.",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "cli": "ts-node src/cliRunner.ts",
+    "todo": "npm run cli --"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81"
+  },
+  "devDependencies": {
+    "@types/blessed": "^0.1.0",
+    "typescript": "^4.5.4",
+    "ts-node": "^10.4.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1"
+  },
+  "keywords": [
+    "todo",
+    "terminal",
+    "typescript",
+    "blessed"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
