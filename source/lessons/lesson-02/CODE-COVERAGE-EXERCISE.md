@@ -34,13 +34,49 @@ The coverage report shows several metrics:
 
 ### Viewing Detailed Coverage
 
-After running `npm run test:coverage`, you can open the HTML report:
+After running `npm run test:coverage`, you can view the detailed HTML coverage report in several ways:
 
+#### Option 1: Command Line
+**macOS/Linux:**
 ```bash
 open coverage/lcov-report/index.html
 ```
 
-This provides a visual representation of which lines are covered (green) and which are not (red).
+**Windows (Command Prompt):**
+```cmd
+start coverage\lcov-report\index.html
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-Item coverage\lcov-report\index.html
+```
+
+**Git Bash (Windows):**
+```bash
+start coverage/lcov-report/index.html
+```
+
+#### Option 2: Visual Studio Code
+1. In the Explorer panel, navigate to `coverage/lcov-report/`
+2. Right-click on `index.html`
+3. Select **"Open with Live Server"** (if you have the Live Server extension)
+4. Or select **"Reveal in Finder"** (macOS) or **"Reveal in File Explorer"** (Windows) and double-click the file
+
+#### Option 3: Cursor IDE
+1. In the file explorer, navigate to `coverage/lcov-report/`
+2. Right-click on `index.html`
+3. Select **"Open in Browser"** or **"Open with System Default"**
+4. Alternatively, you can preview HTML files directly in Cursor by:
+   - Opening `index.html` in the editor
+   - Using the preview pane (if available)
+
+#### Option 4: Manual Browser Opening
+1. Navigate to your project folder in your file manager
+2. Go to `coverage/lcov-report/`
+3. Double-click `index.html` to open it in your default browser
+
+The HTML report provides a visual representation of which lines are covered (highlighted in green) and which are not covered (highlighted in red or pink). You can click on individual files to see line-by-line coverage details.
 
 ## Your Task
 
