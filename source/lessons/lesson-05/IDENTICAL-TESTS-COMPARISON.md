@@ -225,3 +225,4 @@ This comparison proves that **architecture matters** - not just for code organiz
 - Long-term maintenance
 
 Students see firsthand why **separation of concerns** is a fundamental principle of good software design! 🎯
+

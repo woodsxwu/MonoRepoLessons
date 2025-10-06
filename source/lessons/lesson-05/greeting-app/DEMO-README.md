@@ -58,3 +58,4 @@ npm run test:watch
 - **Separation of concerns enables better testing**
 - **Architecture decisions impact test strategy**
 - **Both approaches have their place in real applications**
+

@@ -105,3 +105,4 @@ After experiencing this pain, students should compare with the model-based versi
 **This is why separation of concerns matters!** 
 
 Good architecture isn't just about clean code—it's about **testable, maintainable, and reliable software**.
+

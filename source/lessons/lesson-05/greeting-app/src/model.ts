@@ -99,3 +99,4 @@ export class MockGreetingModel implements GreetingModel {
     return this.updateCallCount;
   }
 }
+

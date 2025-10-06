@@ -105,3 +105,4 @@ Students will understand that **good testing starts with good architecture**. Th
 ---
 
 *This lesson bridges the gap between basic React knowledge and professional testing practices, showing students how architectural decisions impact testing strategy.*
+
