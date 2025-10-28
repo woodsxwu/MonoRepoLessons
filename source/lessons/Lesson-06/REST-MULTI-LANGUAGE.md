@@ -102,7 +102,10 @@ For each server:
 - **Port Configuration**: Set each new server to run on a different port locally (e.g., 5003, 5004) to avoid conflicts.
 - **README.md**: Include a `README.md` file in each server directory explaining how to set up and run the server. This README should provide:
   - A step-by-step guide to set up the server from scratch
-  - Installation requirements (including version numbers)
+  - Installation requirements (including version numbers):
+    - For Node.js projects, specify Node and npm versions (use `node --version` and `npm --version` to check)
+    - For language-specific tools, document the version used (e.g., Python 3.11, Go 1.21, etc.)
+    - Include any framework or library versions that are critical
   - Commands to start the server
   - Any additional setup instructions
   - Platform testing information:
